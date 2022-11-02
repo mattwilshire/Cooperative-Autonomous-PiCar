@@ -62,7 +62,7 @@ iface wlan0 inet static
     wireless-mode ad-hoc
 ```
  
-#### Install dhcp for mac to ssh into car
+#### Install dhcp so that mac can ssh into car
 ```
 sudo apt-get install isc-dhcp-server
 sudo nano /etc/dhcp/dhcpd.conf
