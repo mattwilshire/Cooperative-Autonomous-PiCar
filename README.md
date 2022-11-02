@@ -89,3 +89,5 @@ sudo cp /etc/network/wifi-interface interfaces
 
 # sudo reboot now
 ```
+#### Make sure to remove the networks in to stop auto connecting
+/etc/wpa_supplicant/wpa_supplicant.conf
