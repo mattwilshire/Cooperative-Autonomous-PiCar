@@ -89,5 +89,17 @@ sudo cp /etc/network/wifi-interface interfaces
 
 # sudo reboot now
 ```
-#### Make sure to remove the networks in to stop auto connecting
+#### Add priority to the RPitest
 /etc/wpa_supplicant/wpa_supplicant.conf
+```
+network={
+        ssid="RPitest"
+        key_mgmt=NONE
+        priority=5
+}
+```
+
+It will connect to Rpitest first on the first interface then the actual wifi router on the second interface.
+This won't be in the file if you haven't connected to it (weird because it connects to itself)
+
+
