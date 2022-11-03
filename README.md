@@ -115,3 +115,5 @@ denyinterfaces wlan0
 ```
 
 This took ages to figure out, you must do this in order to stop wlan0 not using the static ip. DHCP client will try see if there is anything to connect to and assign an ip, this is not what we want.
+
+Use this if there are issues https://github.com/simondlevy/RPiAdHocWiFi
