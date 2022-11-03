@@ -102,4 +102,5 @@ network={
 It will connect to Rpitest first on the first interface then the actual wifi router on the second interface.
 This won't be in the file if you haven't connected to it (weird because it connects to itself)
 
+Use iwconfig to see if both interfaces have connected to different points, if not then make sure to forget the wifi network and add it again.
 
