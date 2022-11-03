@@ -104,3 +104,14 @@ This won't be in the file if you haven't connected to it (weird because it conne
 
 Use iwconfig to see if both interfaces have connected to different points, if not then make sure to forget the wifi network and add it again.
 
+#### MUST DO: sudo nano /etc/dhcpcd.conf
+
+Set the file to only have the following.
+
+```
+
+denyinterfaces wlan0
+
+```
+
+This took ages to figure out, you must do this in order to stop wlan0 not using the static ip. DHCP client will try see if there is anything to connect to and assign an ip, this is not what we want.
