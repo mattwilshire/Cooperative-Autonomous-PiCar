@@ -11,11 +11,13 @@
 >5. cd ~/SunFounder_PiCar-V
 >6. picar servo-install
 
-
 ## Starting the server: 
 >
 > - cd ~/SunFounder_PiCar-V/remote-control
 > - sudo ./start
+
+## Wheel Calibration
+  Clibrate the wheels using the web browser when you run sudo ./start there will be a calibration place, move the front wheels and click OK.
 
 #### Make sure the ports are open: *sudo ufw disable*
 
