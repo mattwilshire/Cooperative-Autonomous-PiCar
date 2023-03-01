@@ -1,5 +1,5 @@
 # Self Driving PiCar
- Self driving PiCar using a neural network.
+ Self driving PiCar using lane keep algorithm and communication protocol.
 
 ## Installation 
   [Full Guide](https://docs.sunfounder.com/projects/picar-v/en/latest/servo_configuration.html#get-source-code)
@@ -18,15 +18,9 @@
 
 ## Wheel Calibration
   Clibrate the wheels using the web browser when you run sudo ./start there will be a calibration place, move the front wheels and click OK.
+  Then use the offset in the config file of the source code.
 
 #### Make sure the ports are open: *sudo ufw disable*
-
-## Static IPV4
-> 1. Right click Wifi Icon -> Wireless and Wired Network Settings -> Select wlan interface or an SSID
-> 2. IPV4 -> 192.168.1.120/24
-> 3. Router -> 192.168.1.1
-> 4. DNS Servers -> 192.168.1.1
-> 5. Leave the rest empty and keep "Automatically configure empty options" checked
 
 ## Ad Hoc Wireless Network
 [Guide](https://pyshine.com/How-to-configure-Raspberry-Pi-in-Ad-hoc-wifi-mode/)
@@ -64,47 +58,11 @@ iface wlan0 inet static
     wireless-mode ad-hoc
 ```
  
-#### Install dhcp so that mac can ssh into car
+#### Now enable it by replacing the interfaces file
 ```
-sudo apt-get install isc-dhcp-server
-sudo nano /etc/dhcp/dhcpd.conf
-```
-
-```
- # Scroll down and paste this to the end
- # This will assign the first device connected X.X.X.3 up to X.X.X.10
- ddns-update-style interim;
-  default-lease-time 600;
-  max-lease-time 7200;
-  authoritative;
-  log-facility local7;
-  subnet 192.168.4.0 netmask 255.255.255.0 {
-   range 192.168.4.3 192.168.4.10;
-  }
-
-# Now enable it by replacing the interfaces file
 cd /etc/network
 sudo cp /etc/network/adhoc-interface interfaces
-
-# Or if you want to switch back to the old file
-sudo cp /etc/network/wifi-interface interfaces
-
-# sudo reboot now
 ```
-#### Add priority to the RPitest
-/etc/wpa_supplicant/wpa_supplicant.conf
-```
-network={
-        ssid="RPitest"
-        key_mgmt=NONE
-        priority=5
-}
-```
-
-It will connect to Rpitest first on the first interface then the actual wifi router on the second interface.
-This won't be in the file if you haven't connected to it (weird because it connects to itself)
-
-Use iwconfig to see if both interfaces have connected to different points, if not then make sure to forget the wifi network and add it again.
 
 #### MUST DO: sudo nano /etc/dhcpcd.conf
 
