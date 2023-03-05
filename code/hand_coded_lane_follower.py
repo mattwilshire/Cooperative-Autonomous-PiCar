@@ -4,6 +4,7 @@ import logging
 import math
 import datetime
 import sys
+import time
 
 _SHOW_IMAGE = False
 
@@ -14,6 +15,7 @@ class HandCodedLaneFollower(object):
         logging.info('Creating a HandCodedLaneFollower...')
         self.car = car
         self.curr_steering_angle = 90
+        self.oldtime = time.time()
 
     def follow_lane(self, frame):
         # Main entry point of the lane follower
@@ -35,8 +37,10 @@ class HandCodedLaneFollower(object):
 
         if self.car is not None:
             self.car.front_wheels.turn(self.curr_steering_angle)
+            new_time = time.time()
             cv2.imwrite('frames/' + str(self.curr_steering_angle) + '.png', frame)
-            print(self.curr_steering_angle)
+            print("Steering angle :" + str(self.curr_steering_angle) + " (" + str((new_time - self.oldtime)) + ")")
+            self.oldtime = new_time
         curr_heading_image = display_heading_line(frame, self.curr_steering_angle)
         show_image("heading", curr_heading_image)
 
@@ -70,7 +74,7 @@ def detect_edges(frame):
     # filter for blue lane lines
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     show_image("hsv", hsv)
-    lower_blue = np.array([30, 40, 0])
+    lower_blue = np.array([90, 50, 50])
     #lower_blue = np.array([60, 40, 40])
     upper_blue = np.array([150, 255, 255])
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
