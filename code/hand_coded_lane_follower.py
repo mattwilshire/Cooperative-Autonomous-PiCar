@@ -19,7 +19,7 @@ class HandCodedLaneFollower(object):
 
     def follow_lane(self, frame):
         # Main entry point of the lane follower
-        show_image("orig", frame)
+        #show_image("orig", frame)
 
         lane_lines, frame = detect_lane(frame)
         final_frame = self.steer(frame, lane_lines)

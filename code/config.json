@@ -1,0 +1,16 @@
+{
+	"id": 1,
+	"camera": {
+		"pitch": -35,
+		"yaw" : 0,
+		"steering": 25
+	},
+	"route": {
+		"x": 40,
+		"y": 120,
+		"merge_x": 0,
+		"merge_y": 360,
+		"dest_x": 0,
+		"dest_y": 500
+	}
+}
