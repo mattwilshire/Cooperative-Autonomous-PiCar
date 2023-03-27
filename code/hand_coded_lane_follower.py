@@ -8,7 +8,6 @@ import time
 
 _SHOW_IMAGE = False
 
-
 class HandCodedLaneFollower(object):
 
     def __init__(self, car=None):
@@ -51,7 +50,7 @@ class HandCodedLaneFollower(object):
 # Frame processing steps
 ############################
 def detect_lane(frame):
-    logging.debug('detecting lane lines...')
+    # logging.debug('detecting lane lines...')
 
     edges = detect_edges(frame)
     show_image('edges', edges)
