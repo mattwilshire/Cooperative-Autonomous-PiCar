@@ -1,7 +1,16 @@
 from environment import Environment
+from iputils import get_ip, is_allowed_ip
 import socket
 import threading
 import json
+
+ip_address = get_ip()
+if not is_allowed_ip(ip_address):
+    print('IP is not allowed must be either 192.168.4.1 or 192.168.4.2')
+    exit()
+
+print(ip_address)
+exit()
 
 localIP     = ""
 localPort   = 5000

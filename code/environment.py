@@ -20,7 +20,7 @@ class Environment(Thread):
 		self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
 	def run(self):
-		speed = 40
+		speed = 50
 		self.gps_thread_interrupt = Event()
 		with PiCar(self.event) as car:
 			self.car = car
