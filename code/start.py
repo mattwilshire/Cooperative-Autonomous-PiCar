@@ -33,27 +33,37 @@ while True:
     message = bytesAddressPair[0]
     address = bytesAddressPair[1]
     message = message.decode()
+    args = None
+
     try:
         message = json.loads(message)
         is_json = True
     except ValueError:
-        pass
+        args = message.split(' ')[1:]
+        message = message.split(' ')[0]
 
     if is_json:
         environment_thread.on_network_message(message)
     else:
         if message == "start":
-            print("Starting Environment!")
             environment_thread_interrupt = threading.Event()
-            environment_thread = Environment(environment_thread_interrupt, ip_address)
+            collide = False
+            print("Starting the environment!")
+            if len(args) > 0:
+                if args[0] == 'collide':
+                    print("Collision is on!!!")
+                    collide = True
+            environment_thread = Environment(environment_thread_interrupt, ip_address, collide)
+            environment_thread.daemon = True
+            environment_thread.start()
+        elif message == "switch":
+            environment_thread_interrupt = threading.Event()
+            environment_thread = Environment(environment_thread_interrupt, ip_address, False, switch=True)
             environment_thread.daemon = True
             environment_thread.start()
         elif message == "kill":
             environment_thread_interrupt.set()
             print("Killing start thread!")
-            environment_thread.join()
-            print("Killed start thread!")
-            environment_thread = None
         elif message == "quit":
             print("Received quit from network!")
             environment_thread_interrupt.set()

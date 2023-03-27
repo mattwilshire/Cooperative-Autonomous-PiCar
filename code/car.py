@@ -14,6 +14,7 @@ class PiCar(object):
     __SCREEN_WIDTH = 320
     __SCREEN_HEIGHT = 240
 
+
     def __init__(self, environment, event, car_data, ip):
         """ Init camera and wheels"""
         self.environment = environment
@@ -30,6 +31,8 @@ class PiCar(object):
         self.camera = cv2.VideoCapture(-1)
         self.camera.set(3, self.__SCREEN_WIDTH)
         self.camera.set(4, self.__SCREEN_HEIGHT)
+
+        #self.video = cv2.VideoWriter('video.mp4', cv2.VideoWriter_fourcc(*'DIVX'), 20.0, (self.__SCREEN_WIDTH, self.__SCREEN_HEIGHT))
 
         if "pitch" in self.car_data["config"]:
             self.pan_servo = picar.Servo.Servo(1)
@@ -68,6 +71,7 @@ class PiCar(object):
         self.back_wheels.speed = 0
         self.front_wheels.turn(90)
         self.camera.release()
+        #self.video.release()
         cv2.destroyAllWindows()
 
     def drive(self, speed=__INITIAL_SPEED):
@@ -83,8 +87,10 @@ class PiCar(object):
                 break
 
             _, image_lane = self.camera.read()
-            if self.id == "1":
+            #self.video.write(image_lane)
+            if (self.id == "1" and self.environment.switch == False) or (self.id == "2" and self.environment.switch == True):
                 image_lane = self.follow_lane(image_lane)
+                
 
     def follow_lane(self, image):
         image = self.lane_follower.follow_lane(image)
