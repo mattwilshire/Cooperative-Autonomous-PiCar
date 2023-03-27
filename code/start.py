@@ -9,8 +9,10 @@ if not is_allowed_ip(ip_address):
     print('IP is not allowed must be either 192.168.4.1 or 192.168.4.2')
     exit()
 
-print(ip_address)
-exit()
+'''
+    Server Setup
+    Listens to every message on the broadcast address (192.168.4.255)
+'''
 
 localIP     = ""
 localPort   = 5000
@@ -43,12 +45,15 @@ while True:
         if message == "start":
             print("Starting Environment!")
             environment_thread_interrupt = threading.Event()
-            environment_thread = Environment(environment_thread_interrupt)
+            environment_thread = Environment(environment_thread_interrupt, ip_address)
             environment_thread.daemon = True
             environment_thread.start()
         elif message == "kill":
             environment_thread_interrupt.set()
             print("Killing start thread!")
+            environment_thread.join()
+            print("Killed start thread!")
+            environment_thread = None
         elif message == "quit":
             print("Received quit from network!")
             environment_thread_interrupt.set()
