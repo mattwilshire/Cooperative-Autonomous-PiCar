@@ -17,8 +17,8 @@
 	"192.168.4.2" : {
 		"config": {
 			"pitch": -50,
-			"yaw" : -20,
-			"steering": -15
+			"yaw" : -15,
+			"steering": -20
 		},
 		"route": {
 			"x": 0,
