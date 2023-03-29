@@ -1,7 +1,7 @@
 {
 	"192.168.4.1" : {
 		"config": {
-			"pitch": -35,
+			"pitch": -30,
 			"yaw" : 5,
 			"steering": 25
 		},
@@ -9,7 +9,7 @@
 			"x": 40,
 			"y": 120,
 			"merge_x": 0,
-			"merge_y": 380,
+			"merge_y": 250,
 			"dest_x": 0,
 			"dest_y": 500
 		}
@@ -24,7 +24,7 @@
 			"x": 0,
 			"y": 0,
 			"merge_x": 0,
-			"merge_y": 380,
+			"merge_y": 250,
 			"dest_x": 0,
 			"dest_y": 500
 		}
