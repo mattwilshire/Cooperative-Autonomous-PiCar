@@ -1,7 +1,18 @@
 from environment import Environment
+from iputils import get_ip, is_allowed_ip
 import socket
 import threading
 import json
+
+ip_address = get_ip()
+if not is_allowed_ip(ip_address):
+    print('IP is not allowed must be either 192.168.4.1 or 192.168.4.2')
+    exit()
+
+'''
+    Server Setup
+    Listens to every message on the broadcast address (192.168.4.255)
+'''
 
 localIP     = ""
 localPort   = 5000
@@ -22,19 +33,32 @@ while True:
     message = bytesAddressPair[0]
     address = bytesAddressPair[1]
     message = message.decode()
+    args = None
+
     try:
         message = json.loads(message)
         is_json = True
     except ValueError:
-        pass
+        args = message.split(' ')[1:]
+        message = message.split(' ')[0]
 
     if is_json:
         environment_thread.on_network_message(message)
     else:
         if message == "start":
-            print("Starting Environment!")
             environment_thread_interrupt = threading.Event()
-            environment_thread = Environment(environment_thread_interrupt)
+            collide = False
+            print("Starting the environment!")
+            if len(args) > 0:
+                if args[0] == 'collide':
+                    print("Collision is on!!!")
+                    collide = True
+            environment_thread = Environment(environment_thread_interrupt, ip_address, collide)
+            environment_thread.daemon = True
+            environment_thread.start()
+        elif message == "switch":
+            environment_thread_interrupt = threading.Event()
+            environment_thread = Environment(environment_thread_interrupt, ip_address, False, switch=True)
             environment_thread.daemon = True
             environment_thread.start()
         elif message == "kill":

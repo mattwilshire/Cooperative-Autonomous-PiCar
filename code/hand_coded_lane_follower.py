@@ -8,7 +8,6 @@ import time
 
 _SHOW_IMAGE = False
 
-
 class HandCodedLaneFollower(object):
 
     def __init__(self, car=None):
@@ -36,13 +35,14 @@ class HandCodedLaneFollower(object):
         self.curr_steering_angle = stabilize_steering_angle(self.curr_steering_angle, new_steering_angle, len(lane_lines))
 
         if self.car is not None:
+            if self.curr_steering_angle < 65:
+                self.curr_steering_angle += 15
             self.car.front_wheels.turn(self.curr_steering_angle)
             new_time = time.time()
-            cv2.imwrite('frames/' + str(self.curr_steering_angle) + '.png', frame)
+            #cv2.imwrite('frames/' + str(self.curr_steering_angle) + '.png', frame)
             print("Steering angle :" + str(self.curr_steering_angle) + " (" + str((new_time - self.oldtime)) + ")")
             self.oldtime = new_time
         curr_heading_image = display_heading_line(frame, self.curr_steering_angle)
-        show_image("heading", curr_heading_image)
 
         return curr_heading_image
 
@@ -51,21 +51,13 @@ class HandCodedLaneFollower(object):
 # Frame processing steps
 ############################
 def detect_lane(frame):
-    logging.debug('detecting lane lines...')
 
     edges = detect_edges(frame)
-    show_image('edges', edges)
-
     cropped_edges = region_of_interest(edges)
-    show_image('edges cropped', cropped_edges)
-
     line_segments = detect_line_segments(cropped_edges)
     line_segment_image = display_lines(frame, line_segments)
-    show_image("line segments", line_segment_image)
-
     lane_lines = average_slope_intercept(frame, line_segments)
     lane_lines_image = display_lines(frame, lane_lines)
-    show_image("lane lines", lane_lines_image)
 
     return lane_lines, lane_lines_image
 
@@ -73,12 +65,10 @@ def detect_lane(frame):
 def detect_edges(frame):
     # filter for blue lane lines
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    show_image("hsv", hsv)
     lower_blue = np.array([90, 50, 50])
     #lower_blue = np.array([60, 40, 40])
     upper_blue = np.array([150, 255, 255])
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
-    show_image("blue mask", mask)
 
     # detect edges
     edges = cv2.Canny(mask, 200, 400)
@@ -88,12 +78,10 @@ def detect_edges(frame):
 def detect_edges_old(frame):
     # filter for blue lane lines
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    show_image("hsv", hsv)
     for i in range(16):
         lower_blue = np.array([30, 16 * i, 0])
         upper_blue = np.array([150, 255, 255])
         mask = cv2.inRange(hsv, lower_blue, upper_blue)
-        show_image("blue mask Sat=%s" % (16* i), mask)
 
 
     #for i in range(16):
@@ -122,7 +110,6 @@ def region_of_interest(canny):
     ]], np.int32)
 
     cv2.fillPoly(mask, polygon, 255)
-    show_image("mask", mask)
     masked_image = cv2.bitwise_and(canny, mask)
     return masked_image
 
