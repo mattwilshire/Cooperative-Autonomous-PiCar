@@ -66,7 +66,8 @@ class Environment(Thread):
 				to_pos = [self.gps.route['merge_x'], self.gps.route['merge_y']]
 				self.car.send_request(dist, to_pos, coords)
 
-		if self.car.id == "1" and y >= self.car_data['route']['merge_y'] - 60 and not self.car.reached_merge:
+		if self.car.id == "1" and y >= self.car_data['route']['merge_y'] - 60 and not self.car.reached_merge and not self.car.sent_finish:
+			self.car.sent_finish = True
 			msg_json = {
 				'TYPE' : 'FINISH',
 				'CURRENT_TIME' : current_time,

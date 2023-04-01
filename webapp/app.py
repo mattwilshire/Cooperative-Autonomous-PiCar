@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from threading import Thread, Event
 from time import sleep
 import socket
+import json
 
 app = Flask(__name__)
 
@@ -47,7 +48,7 @@ def listen(thread_interrupt, packets):
     while True:
         if thread_interrupt.is_set():
             break
-
+        
         try:
             bytesAddressPair = server_socket.recvfrom(bufferSize)
             message = bytesAddressPair[0]

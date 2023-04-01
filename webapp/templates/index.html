@@ -65,6 +65,7 @@
 				if(jsonResponse.length == 0) return;
 
 				packets.push(jsonResponse[0]);
+				console.log(jsonResponse[0])
 				packet = packet + 1;
 			}
 			xhttp.open("GET", "/poll?index=" + packet);
