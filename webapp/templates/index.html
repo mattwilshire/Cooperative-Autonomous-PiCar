@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cooperative Lane Merge</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+		</style>
+	</head>
+	<body>
+		<button id="start">Start</button>
+		<button id="stop">Stop</button>
+
+		<div id="demo"></div>
+	</body>
+
+	<script defer>
+		let started = false;
+		let pollInterval;
+
+		const startButton = document.querySelector('#start');
+		startButton.addEventListener('click', () => {
+
+			const xhttp = new XMLHttpRequest();
+			xhttp.onload = function() {
+				if(xhttp.responseText == "OK") {
+					// Started!
+					onStart();
+				}
+			}
+			xhttp.open("GET", "/start");
+			xhttp.send();
+		});
+
+		const stopButton = document.querySelector('#stop');
+		stopButton.addEventListener('click', () => {
+			const xhttp = new XMLHttpRequest();
+			xhttp.onload = function() {
+				if(xhttp.responseText == "OK") {
+					onStop();
+				}
+			}
+			xhttp.open("GET", "/stop");
+			xhttp.send();
+		});
+
+		function onStart() {
+			pollInterval = setInterval(poll, 500);
+			console.log("Started!");
+		}
+
+		function onStop() {
+			clearInterval(pollInterval);
+			console.log("Stopped!");
+		}
+
+		function poll() {
+			const xhttp = new XMLHttpRequest();
+			xhttp.onload = function() {
+				console.log(xhttp.responseText);
+			}
+			xhttp.open("GET", "/poll");
+			xhttp.send();
+		}
+	</script>
+</html>
