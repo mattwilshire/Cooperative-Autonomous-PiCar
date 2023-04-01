@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from threading import Thread, Event
 from time import sleep
 import socket
@@ -42,18 +42,23 @@ def listen(thread_interrupt, packets):
     server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     server_socket.bind((localIP, localPort))
+    server_socket.settimeout(1)
 
     while True:
         if thread_interrupt.is_set():
             break
 
-        bytesAddressPair = server_socket.recvfrom(bufferSize)
-        message = bytesAddressPair[0]
-        message = message.decode()
-
         try:
-            message = json.loads(message)
-            packets.append(message)
+            bytesAddressPair = server_socket.recvfrom(bufferSize)
+            message = bytesAddressPair[0]
+            message = message.decode()
+
+            try:
+                message = json.loads(message)
+                packets.append(message)
+            except:
+                pass
+
         except:
             pass
 
@@ -78,7 +83,21 @@ def stop():
 @app.route('/poll', methods=['GET'])
 def poll():
     global packets
-    return jsonify(packets)
+    index = int(request.args.get("index"))
+
+    if index is None:
+        return jsonify([])
+
+    if index >= len(packets):
+        return jsonify([])
+
+    if len(packets) < index:
+        return jsonify([])
+
+    if index == 0 and len(packets) == 0:
+        return jsonify([])
+
+    return jsonify([packets[index]])
 
 @app.route('/', methods=['GET'])
 def index():
