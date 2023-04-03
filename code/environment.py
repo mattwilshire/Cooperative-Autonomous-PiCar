@@ -42,6 +42,7 @@ class Environment(Thread):
 		with PiCar(self, self.event, self.car_data, self.ip) as car:
 			self.car = car
 			self.car.id = self.ip[-1]
+			self.car.sent_finish = False
 			print(self.ip)
 
 			self.gps = GPS(self, self.on_gps_update, self.gps_thread_interrupt, self.car_data)
@@ -66,15 +67,16 @@ class Environment(Thread):
 				to_pos = [self.gps.route['merge_x'], self.gps.route['merge_y']]
 				self.car.send_request(dist, to_pos, coords)
 
-		if self.car.id == "1" and y >= self.car_data['route']['merge_y'] - 60 and not self.car.reached_merge and not self.car.sent_finish:
-			self.car.sent_finish = True
+		if self.car.id == "1" and y >= self.car_data['route']['merge_y'] and not self.car.reached_merge and not self.car.set_finish:
 			msg_json = {
 				'TYPE' : 'FINISH',
 				'CURRENT_TIME' : current_time,
 				'SOURCE' : self.car.id,
 				'POSITION': coords
 			}
+			print(msg_json)
 			self.car.broadcast(msg_json)
+			self.car.sent_finish = True
 
 		if y >= self.car_data['route']['dest_y']:
 			self.event.set()
@@ -127,6 +129,7 @@ class Environment(Thread):
 				self.car.back_wheels.speed = round(speed)
 				print(f"--------------------Adjusted speed to {speed}")
 		elif message['TYPE'] == 'FINISH':
+			print("Received?")
 			self.car.back_wheels.speed = self.car_speeds
 
 
