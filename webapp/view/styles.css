@@ -77,6 +77,23 @@ pre {
 	justify-content: space-between;
 }
 
+.loss-controls {
+	margin-top: 1em;
+}
+
+input {
+	text-align: center;
+	padding: 0.5em 2em;
+	background: transparent;
+	border: 1px solid white;
+	color: white;
+	margin: 0.5em 0;
+}
+
+.has-loss {
+	border: 1px solid red !important;
+}
+
 .packet {
 	transform: translateY(-10px);
 	opacity: 0;

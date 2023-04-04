@@ -79,8 +79,8 @@ while True:
                     print("Collision is on!!!")
                     collide = True
                 elif args[0] == 'loss':
-                    loss_amount = args[1]
-            environment_thread = Environment(environment_thread_interrupt, ip_address, collide, loss_amount)
+                    loss_amount = int(args[1])
+            environment_thread = Environment(environment_thread_interrupt, ip_address, collide, loss_amount=loss_amount)
             environment_thread.daemon = True
             environment_thread.start()
         elif message == "switch":

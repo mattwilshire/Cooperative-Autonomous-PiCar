@@ -85,13 +85,23 @@ class Environment(Thread):
 			self.event.set()
 
 	def on_network_message(self, message):
+		if "LOSS" in message:
+			return
+		
 		''' We got a message from ourselves on the broadcast, discard it.'''
 		if message['SOURCE'] == self.car.id:
 			return
 		random_val = random.random()
 
+		# print("WHATTT")
+		# print(self.loss / 100)
+		# print(random_val)
+		# print("WHAT")
+
 		if random_val < (self.loss / 100):
 			print("LOST PACKET: %s" % message)
+			message["LOSS"] = 1
+			self.car.broadcast(message)
 			return
 		
 		current_time = int(time.time())

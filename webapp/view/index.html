@@ -15,6 +15,9 @@
 				<section class="controls">
 					<button id="start">Start</button>
 					<button id="stop">Stop</button>
+					<section class="loss-controls">
+						<input type="text" id="loss-amount" placeholder="Loss Amount" />
+					</section>
 				</section>
 				<section class="packet-info">
 					<!-- <section class="packet visible">
@@ -51,6 +54,10 @@
 			section.appendChild(sectionHeading);
 			section.appendChild(preJson);
 			document.querySelector('.packet-info').appendChild(section)
+
+			if('LOSS' in data) {
+				section.classList.add('has-loss');
+			}
 			setTimeout(() => {
 			  section.classList.add('visible');
 			}, 200);
@@ -100,7 +107,14 @@
 				startButton.classList.add('started');
 				started = true;
 				userPacket('START');
-				eel.start();
+				let lossAmount = document.querySelector('#loss-amount');
+				if(lossAmount.value != "") {
+					eel.start_loss(lossAmount.value);
+					console.log('Loss start');
+				} else {
+					eel.start();
+					console.log('start');
+				}
 			}
 		});
 

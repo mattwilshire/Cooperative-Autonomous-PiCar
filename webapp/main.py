@@ -46,6 +46,7 @@ def start():
 	if not started:
 		global thread_interrupt
 		global thread
+		thread_interrupt.clear()
 		send("start")
 		thread = Thread(target=listen, args=(thread_interrupt,) )
 		thread.start()
@@ -66,5 +67,18 @@ def stop():
 		print("Listening Thread Killed")
 		eel.fullyStopped()
 
+@eel.expose
+def start_loss(loss):
+	global started
+	if not started:
+		global thread_interrupt
+		global thread
+		thread_interrupt.clear()
+		send("start loss %s" % loss)
+		thread = Thread(target=listen, args=(thread_interrupt,) )
+		thread.start()
+		print("Listening Thread Started")
+		started = True
+
 eel.init("view")
-eel.start('index.html', size=(1080, 900), position=(450,100))
+eel.start('index.html', size=(1080, 900), position=(250,100))
