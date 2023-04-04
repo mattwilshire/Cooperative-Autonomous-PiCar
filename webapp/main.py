@@ -49,12 +49,13 @@ def start():
 		send("start")
 		thread = Thread(target=listen, args=(thread_interrupt,) )
 		thread.start()
+		print("Listening Thread Started")
 		started = True
 
 @eel.expose
 def stop():
 	global started
-	print("WE SHOULD BE STOPPING!")
+	
 	if started:
 		global thread_interrupt
 		global thread
@@ -62,6 +63,7 @@ def stop():
 		thread.join()
 		send("kill")
 		started = False
+		print("Listening Thread Killed")
 		eel.fullyStopped()
 
 eel.init("view")

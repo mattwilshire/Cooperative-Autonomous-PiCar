@@ -6,6 +6,16 @@ import datetime
 import sys
 import time
 
+'''
+Hand Coded Lane Follower
+
+CODE FROM : David Tian
+GitHub : https://github.com/dctian/DeepPiCar
+Article : https://towardsdatascience.com/tagged/deep-pi-car
+
+Edited : To work with lane merge scenario by mattwilshire
+'''
+
 _SHOW_IMAGE = False
 
 class HandCodedLaneFollower(object):
