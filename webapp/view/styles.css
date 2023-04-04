@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+body {
+	background-color: #202124;
+	font-family: 'Raleway', sans-serif;
+}
+
+main {
+	width: 75%;
+	margin: 0 auto;
+}
+
+main > section {
+	text-align: center;
+}
+
+section > h1 {
+	color: white;
+	font-size: 2em;
+	font-style: normal;
+	font-weight: normal;
+}
+
+.top-section {
+	position: absolute;
+	top: 40%;
+	left: 25%;
+	transition: top 0.5s ease-out;
+}
+
+#start.started {
+	color: green;
+	border: 1px solid green;
+}
+
+.controls > button {
+	padding: 0.5em 2em;
+	background: transparent;
+	border: 1px solid white;
+	color: white;
+	margin: 0 1em;
+}
+
+.packet-info {
+	margin: 1em 0;
+	overflow: hidden;
+	max-height: 0px;
+	transition: max-height 1s ease-out;
+	transition-delay: 0.5s;
+}
+
+.top-section.initialized > .packet-info {
+	max-height: 4500px;
+}
+
+.top-section.initialized {
+	top: 25px;
+}
+
+.packet-info h1, .packet-info h2 {
+	font-size: 1em;
+	margin: 0;
+}
+
+.packet-info > section {
+	padding: 1em;
+	border-radius: 1em;
+	border: 1px solid white;
+	margin: 1em 0;
+}
+
+pre {
+	color: rgba(255, 255, 255, 0.75);
+}
+
+.packet-info {
+	text-align: left;
+}
+
+.top-packet {
+	display: flex;
+	justify-content: space-between;
+}
+
+.packet {
+	transform: translateY(-10px);
+	opacity: 0;
+	transition: opacity 0.25s ease-in, transform 0.25s ease-in;
+}
+
+.packet.visible {
+	transform: translateY(0);
+	opacity: 1;
+}
