@@ -2,6 +2,7 @@ import eel
 import time
 from threading import Thread, Event
 import socket
+import json
 
 started = False
 thread = None

@@ -48,12 +48,15 @@ while True:
         if message == "start":
             environment_thread_interrupt = threading.Event()
             collide = False
+            loss_amount = 0
             print("Starting the environment!")
             if len(args) > 0:
                 if args[0] == 'collide':
                     print("Collision is on!!!")
                     collide = True
-            environment_thread = Environment(environment_thread_interrupt, ip_address, collide)
+                elif args[0] == 'loss':
+                    loss_amount = args[1]
+            environment_thread = Environment(environment_thread_interrupt, ip_address, collide, loss_amount)
             environment_thread.daemon = True
             environment_thread.start()
         elif message == "switch":

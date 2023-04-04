@@ -5,15 +5,18 @@ import json
 import time
 import socket
 import math
+import random
 #TEST
 class Environment(Thread):
 
-	def __init__(self, event, ip_address, collide, switch=False):
+	def __init__(self, event, ip_address, collide, switch=False, loss_amount=0):
 		Thread.__init__(self)
 		
 		self.event = event
 		self.ip = ip_address
 		self.switch = switch
+
+		self.loss = loss_amount
 
 		if switch == True:
 			if self.ip[-1] == "1":
@@ -67,7 +70,7 @@ class Environment(Thread):
 				to_pos = [self.gps.route['merge_x'], self.gps.route['merge_y']]
 				self.car.send_request(dist, to_pos, coords)
 
-		if self.car.id == "1" and y >= self.car_data['route']['merge_y'] and not self.car.reached_merge and not self.car.set_finish:
+		if self.car.id == "1" and y >= self.car_data['route']['merge_y'] and not self.car.reached_merge and not self.car.sent_finish:
 			msg_json = {
 				'TYPE' : 'FINISH',
 				'CURRENT_TIME' : current_time,
@@ -85,7 +88,12 @@ class Environment(Thread):
 		''' We got a message from ourselves on the broadcast, discard it.'''
 		if message['SOURCE'] == self.car.id:
 			return
+		random_val = random.random()
 
+		if random_val < (self.loss / 100):
+			print("LOST PACKET: %s" % message)
+			return
+		
 		current_time = int(time.time())
 
 		if message['TYPE'] == 'REQUEST':
