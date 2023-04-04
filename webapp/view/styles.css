@@ -44,13 +44,8 @@ section > h1 {
 .packet-info {
 	margin: 1em 0;
 	overflow: hidden;
-	max-height: 0px;
-	transition: max-height 1s ease-out;
-	transition-delay: 0.5s;
-}
-
-.top-section.initialized > .packet-info {
 	max-height: 4500px;
+	transition-delay: 0.5s;
 }
 
 .top-section.initialized {

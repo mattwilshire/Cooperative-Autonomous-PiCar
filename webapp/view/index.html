@@ -17,12 +17,12 @@
 					<button id="stop">Stop</button>
 				</section>
 				<section class="packet-info">
-					<section class="packet visible">
+					<!-- <section class="packet visible">
 						<section class="top-packet">
 							<h1>START</h1>
 							<h1>192.168.4.3</h1>
 						</section>
-					</section>
+					</section> -->
 				</section>
 			</section>
 		</main>
@@ -30,6 +30,7 @@
 	<script defer>
 
 		let started = false;
+		let initialized = false;
 
 		function receiveData(data) {
 			let section = document.createElement('section');
@@ -55,14 +56,14 @@
 			}, 200);
 		}
 
-		function fullyStopped() {
+		function userPacket(message) {
 			let section = document.createElement('section');
 			section.classList.add('packet');
 
 			let sectionHeading = document.createElement('section');
 			sectionHeading.classList.add('top-packet');
 			let heading1 = document.createElement('h1');
-			heading1.innerHTML = 'STOP';
+			heading1.innerHTML = message;
 
 			let heading2 = document.createElement('h1');
 			heading2.innerHTML = "192.168.4.3";
@@ -77,6 +78,10 @@
 			}, 200);
 		}
 
+		function fullyStopped() {
+			userPacket('STOP');
+		}
+
 		eel.expose(receiveData)
 		eel.expose(fullyStopped)
 
@@ -85,9 +90,16 @@
 
 		startButton.addEventListener('click', () => {
 			if(!started) {
-				document.querySelector('.top-section').classList.add('initialized');
+				if(!initialized) {
+					document.querySelector('.top-section').classList.add('initialized');
+					initialized = true;
+				} else {
+					document.querySelector('.packet-info').innerHTML = "";
+				}
+
 				startButton.classList.add('started');
 				started = true;
+				userPacket('START');
 				eel.start();
 			}
 		});
