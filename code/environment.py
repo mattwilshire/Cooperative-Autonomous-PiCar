@@ -93,11 +93,6 @@ class Environment(Thread):
 			return
 		random_val = random.random()
 
-		# print("WHATTT")
-		# print(self.loss / 100)
-		# print(random_val)
-		# print("WHAT")
-
 		if random_val < (self.loss / 100):
 			print("LOST PACKET: %s" % message)
 			message["LOSS"] = 1
@@ -119,7 +114,7 @@ class Environment(Thread):
 					eta += 2
 
 			msg_json = {
-				'TYPE' : 'CONFIRM',
+				'TYPE' : 'PROMISE',
 				'CURRENT_TIME' : current_time,
 				'DISTANCE' : dist,
 				'SOURCE' : self.car.id,
@@ -130,16 +125,16 @@ class Environment(Thread):
 			}
 
 			self.car.broadcast(msg_json)
-		elif message['TYPE'] == 'CONFIRM':
+		elif message['TYPE'] == 'PROMISE':
 			msg_json = {
-				'TYPE' : 'GLOBAL',
+				'TYPE' : 'CONFIRM',
 				'SOURCE' : self.car.id
 			}
 			msg_json['PLAN'] = {}
 			msg_json['PLAN'][message['SOURCE']] = message
 
 			self.car.broadcast(msg_json)
-		elif message['TYPE'] == 'GLOBAL':
+		elif message['TYPE'] == 'CONFIRM':
 			if str(self.car.id) in message['PLAN']:
 				eta = float(message['PLAN'][str(self.car.id)]['ETA_TIME'])
 				dist = math.sqrt((self.gps.route['merge_x'] - self.gps.x) ** 2 + (self.gps.route['merge_y'] - self.gps.y) ** 2)
