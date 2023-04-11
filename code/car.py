@@ -25,6 +25,7 @@ class PiCar(object):
        
         self.sent_request = False
         self.reached_merge = False
+        self.set_finish = False
 
         ''' Camera Setup '''
         picar.setup()

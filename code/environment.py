@@ -5,15 +5,18 @@ import json
 import time
 import socket
 import math
+import random
 #TEST
 class Environment(Thread):
 
-	def __init__(self, event, ip_address, collide, switch=False):
+	def __init__(self, event, ip_address, collide, switch=False, loss_amount=0):
 		Thread.__init__(self)
 		
 		self.event = event
 		self.ip = ip_address
 		self.switch = switch
+
+		self.loss = loss_amount
 
 		if switch == True:
 			if self.ip[-1] == "1":
@@ -42,6 +45,7 @@ class Environment(Thread):
 		with PiCar(self, self.event, self.car_data, self.ip) as car:
 			self.car = car
 			self.car.id = self.ip[-1]
+			self.car.sent_finish = False
 			print(self.ip)
 
 			self.gps = GPS(self, self.on_gps_update, self.gps_thread_interrupt, self.car_data)
@@ -66,23 +70,40 @@ class Environment(Thread):
 				to_pos = [self.gps.route['merge_x'], self.gps.route['merge_y']]
 				self.car.send_request(dist, to_pos, coords)
 
-		if self.car.id == "1" and y >= self.car_data['route']['merge_y'] - 60 and not self.car.reached_merge:
+		if self.car.id == "1" and y >= self.car_data['route']['merge_y'] and not self.car.reached_merge and not self.car.sent_finish:
 			msg_json = {
 				'TYPE' : 'FINISH',
 				'CURRENT_TIME' : current_time,
 				'SOURCE' : self.car.id,
 				'POSITION': coords
 			}
+			print(msg_json)
 			self.car.broadcast(msg_json)
+			self.car.sent_finish = True
 
 		if y >= self.car_data['route']['dest_y']:
 			self.event.set()
 
 	def on_network_message(self, message):
+		if "LOSS" in message:
+			return
+		
 		''' We got a message from ourselves on the broadcast, discard it.'''
 		if message['SOURCE'] == self.car.id:
 			return
+		random_val = random.random()
 
+		# print("WHATTT")
+		# print(self.loss / 100)
+		# print(random_val)
+		# print("WHAT")
+
+		if random_val < (self.loss / 100):
+			print("LOST PACKET: %s" % message)
+			message["LOSS"] = 1
+			self.car.broadcast(message)
+			return
+		
 		current_time = int(time.time())
 
 		if message['TYPE'] == 'REQUEST':
@@ -126,6 +147,7 @@ class Environment(Thread):
 				self.car.back_wheels.speed = round(speed)
 				print(f"--------------------Adjusted speed to {speed}")
 		elif message['TYPE'] == 'FINISH':
+			print("Received?")
 			self.car.back_wheels.speed = self.car_speeds
 
 

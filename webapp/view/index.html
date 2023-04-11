@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cooperative Lane Merge</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="eel.js"></script>
+		<link rel="stylesheet" href="styles.css">
+	</head>
+	<body>
+		<main>
+			<section class="top-section">
+				<h1>Co-operative Lane Merge Scenario</h1>
+				<section class="controls">
+					<button id="start">Start</button>
+					<button id="stop">Stop</button>
+					<section class="loss-controls">
+						<input type="text" id="loss-amount" placeholder="Loss Amount" />
+					</section>
+				</section>
+				<section class="packet-info">
+					<!-- <section class="packet visible">
+						<section class="top-packet">
+							<h1>START</h1>
+							<h1>192.168.4.3</h1>
+						</section>
+					</section> -->
+				</section>
+			</section>
+		</main>
+	</body>
+	<script defer>
+
+		let started = false;
+		let initialized = false;
+
+		function receiveData(data) {
+			let section = document.createElement('section');
+			section.classList.add('packet');
+			let sectionHeading = document.createElement('section');
+			sectionHeading.classList.add('top-packet');
+			let heading1 = document.createElement('h1');
+			heading1.innerHTML = data['TYPE'];
+
+			let heading2 = document.createElement('h1');
+			heading2.innerHTML = "CAR " + data['SOURCE'];
+
+			sectionHeading.appendChild(heading1);
+			sectionHeading.appendChild(heading2);
+			let preJson = document.createElement('pre');
+			preJson.innerHTML = JSON.stringify(data, null, "\t");
+
+			section.appendChild(sectionHeading);
+			section.appendChild(preJson);
+			document.querySelector('.packet-info').appendChild(section)
+
+			if('LOSS' in data) {
+				section.classList.add('has-loss');
+			}
+			setTimeout(() => {
+			  section.classList.add('visible');
+			}, 200);
+		}
+
+		function userPacket(message) {
+			let section = document.createElement('section');
+			section.classList.add('packet');
+
+			let sectionHeading = document.createElement('section');
+			sectionHeading.classList.add('top-packet');
+			let heading1 = document.createElement('h1');
+			heading1.innerHTML = message;
+
+			let heading2 = document.createElement('h1');
+			heading2.innerHTML = "192.168.4.3";
+
+			sectionHeading.appendChild(heading1);
+			sectionHeading.appendChild(heading2);
+			section.appendChild(sectionHeading);
+
+			document.querySelector('.packet-info').appendChild(section)
+			setTimeout(() => {
+			  section.classList.add('visible');
+			}, 200);
+		}
+
+		function fullyStopped() {
+			userPacket('STOP');
+		}
+
+		eel.expose(receiveData)
+		eel.expose(fullyStopped)
+
+		const startButton = document.querySelector('#start');
+		const stopButton = document.querySelector('#stop');
+
+		startButton.addEventListener('click', () => {
+			if(!started) {
+				if(!initialized) {
+					document.querySelector('.top-section').classList.add('initialized');
+					initialized = true;
+				} else {
+					document.querySelector('.packet-info').innerHTML = "";
+				}
+
+				startButton.classList.add('started');
+				started = true;
+				userPacket('START');
+				let lossAmount = document.querySelector('#loss-amount');
+				if(lossAmount.value != "") {
+					eel.start_loss(lossAmount.value);
+					console.log('Loss start');
+				} else {
+					eel.start();
+					console.log('start');
+				}
+			}
+		});
+
+		stopButton.addEventListener('click', () => {
+			if(started) {
+				startButton.classList.remove('started');
+				started = false;
+				eel.stop();
+			}
+		});
+
+		// window.addEventListener('DOMContentLoaded', (event) => {
+		// 	eel.start();
+		// });
+	</script>
+</html>

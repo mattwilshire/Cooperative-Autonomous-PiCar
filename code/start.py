@@ -3,6 +3,7 @@ from iputils import get_ip, is_allowed_ip
 import socket
 import threading
 import json
+import picar
 
 ip_address = get_ip()
 if not is_allowed_ip(ip_address):
@@ -13,6 +14,29 @@ if not is_allowed_ip(ip_address):
     Server Setup
     Listens to every message on the broadcast address (192.168.4.255)
 '''
+
+def init_car():
+    picar.setup()
+    f = open('config.json')
+    data = json.load(f)
+    car_data = data[ip_address]
+
+    pan_servo = picar.Servo.Servo(1)
+    pan_servo.offset = car_data['config']['pitch'] 
+    pan_servo.write(90)
+
+    tilt_servo = picar.Servo.Servo(2)
+    tilt_servo.offset = car_data['config']['yaw']
+    tilt_servo.write(90)
+
+    back_wheels = picar.back_wheels.Back_Wheels()
+    back_wheels.speed = 0
+    
+    front_wheels = picar.front_wheels.Front_Wheels()
+    front_wheels.turning_offset = car_data['config']['steering'] 
+    front_wheels.turn(90)
+
+init_car()
 
 localIP     = ""
 localPort   = 5000
@@ -48,12 +72,15 @@ while True:
         if message == "start":
             environment_thread_interrupt = threading.Event()
             collide = False
+            loss_amount = 0
             print("Starting the environment!")
             if len(args) > 0:
                 if args[0] == 'collide':
                     print("Collision is on!!!")
                     collide = True
-            environment_thread = Environment(environment_thread_interrupt, ip_address, collide)
+                elif args[0] == 'loss':
+                    loss_amount = int(args[1])
+            environment_thread = Environment(environment_thread_interrupt, ip_address, collide, loss_amount=loss_amount)
             environment_thread.daemon = True
             environment_thread.start()
         elif message == "switch":
