@@ -102,12 +102,8 @@ class Environment(Thread):
 			dist = math.sqrt((self.gps.route['merge_x'] - self.gps.x) ** 2 + (self.gps.route['merge_y'] - self.gps.y) ** 2)
 			eta = current_time + dist / self.car_speeds
 
-			if self.switch:
-				if (eta - their_eta) < 3:
-					eta += 3
-			else:
-				if (eta - their_eta) < 2:
-					eta += 2
+			if (eta - their_eta) < 3:
+				eta += 3
 
 			msg_json = {
 				'TYPE' : 'PROMISE',
