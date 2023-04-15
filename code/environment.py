@@ -60,12 +60,8 @@ class Environment(Thread):
 		y = coords[1]
 		current_time = int(time.time())
 
-		# if y > self.car_data['route']['merge_y']:
-		# 	self.event.set()
-
 		if self.car.id == "1" and not self.car.sent_request and not self.collide:
 			dist = math.sqrt((self.gps.route['merge_x'] - x) ** 2 + (self.gps.route['merge_y'] - y) ** 2)
-			print("DISTANCE", dist)
 			if dist <= 80:
 				to_pos = [self.gps.route['merge_x'], self.gps.route['merge_y']]
 				self.car.send_request(dist, to_pos, coords)
