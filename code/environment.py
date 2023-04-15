@@ -99,7 +99,8 @@ class Environment(Thread):
 
 		if message['TYPE'] == 'REQUEST':
 			their_eta = float(message['ETA'])
-			dist = math.sqrt((self.gps.route['merge_x'] - self.gps.x) ** 2 + (self.gps.route['merge_y'] - self.gps.y) ** 2)
+			dist = math.sqrt((self.gps.route['merge_x'] - self.gps.x) ** 2 +
+					 (self.gps.route['merge_y'] - self.gps.y) ** 2)
 			eta = current_time + dist / self.car_speeds
 
 			if (eta - their_eta) < 3:
