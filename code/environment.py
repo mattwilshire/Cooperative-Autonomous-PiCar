@@ -130,9 +130,12 @@ class Environment(Thread):
 			if str(self.car.id) in message['PLAN']:
 				eta = float(message['PLAN'][str(self.car.id)]['ETA_TIME'])
 				dist = math.sqrt((self.gps.route['merge_x'] - self.gps.x) ** 2 + (self.gps.route['merge_y'] - self.gps.y) ** 2)
-				speed = 20
+				speed = dist / (eta - current_time)
 				self.car.back_wheels.speed = round(speed)
-				print(f"--------------------Adjusted speed to {speed}")
+				print(f"Adjusted speed to {speed}")
+				
+				
+				#speed = 20
 		elif message['TYPE'] == 'FINISH':
 			print("Received?")
 			self.car.back_wheels.speed = self.car_speeds
