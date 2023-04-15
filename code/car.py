@@ -108,7 +108,7 @@ class PiCar(object):
             'TO_POSITION' : to_pos,
             'ETA' : current_time + (distance / self.environment.car_speeds)
         }
-        print(msg_json)
+
         self.broadcast(msg_json)
         self.sent_request = True
     
