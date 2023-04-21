@@ -1,5 +1,13 @@
 # Self Driving PiCar
  Self driving PiCar using lane keep algorithm and communication protocol.
+ 
+ ### Potocol Paper:
+ 
+ W. Xu, A. Willecke, M. Wegner, L. Wolf and R. Kapitza, "Autonomous Maneuver Coordination Via Vehicular Communication,", https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8806001
+ 
+ ### Lane Keep Assist System: 
+ 
+ D. Tian, "How to Build a Deep Learning, Self Driving Robotic Car on a Shoestring Budget," https://towardsdatascience.com/deeppicar-part-1-102e03c83f2c.
 
 ## Installation 
   [Full Guide](https://docs.sunfounder.com/projects/picar-v/en/latest/servo_configuration.html#get-source-code)
