@@ -1,5 +1,5 @@
-# Self Driving PiCar
- Self driving PiCar using lane keep algorithm and communication protocol.
+# Cooperative-Autonomous-Picar
+ Self driving PiCars using a lane keep algorithm and communication protocol to simulate lane merge scenario.
  
  ### Potocol Paper:
  
